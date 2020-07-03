@@ -1,0 +1,57 @@
+@charset 'utf-8';
+
+// レイアウト
+// ----------------------------------------------------------------------
+
+$breakPoint: 768px;     // ブレークポイント
+$breakPointMid: 1000px; // ブレークポイント（中間）
+$spBaseWidth: 750;      // VW計算のための基準Width
+
+
+
+// フォント
+// ----------------------------------------------------------------------
+
+$fontFamily: 'Noto Sans JP', sans-serif;
+$fontSize: 14;
+$lineHeihgt: (24/14);
+
+
+
+// カラー
+// ex) color: getColor(text);
+// ----------------------------------------------------------------------
+
+$propColor: (
+    body: #fff,
+    text: #333,
+    link: #333,
+    border: #ccc,
+);
+@function getColor($type: 'text') {
+    @return map-get($propColor, $type);
+}
+
+
+
+// ハンバーガーメニュー
+// ----------------------------------------------------------------------
+
+$propHmb: (
+    boxColor: #000,
+    boxWidth: 50px,
+    boxHeight: 50px,
+    lineColor: #fff,
+    lineWidth: 60%,
+    lineHeight: 4px,
+    marginH: 20%,
+    marginV: 13px
+);
+
+
+
+// アニメーション
+// ----------------------------------------------------------------------
+
+$animeTime: 500ms;
+$animeType: ease;

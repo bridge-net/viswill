@@ -1,0 +1,70 @@
+<%
+var define = (typeof define === 'undefined') ? '' : define;
+var meta = (typeof meta === 'undefined') ? '' : meta;
+var siteSetting = (typeof siteSetting === 'undefined') ? '' : siteSetting;
+
+// 階層取得
+var hierarchy_length = 0;
+var hierarchy_link_push = '';
+for(i in meta.hierarchy) {
+  hierarchy_link_push += meta.hierarchy[i].link;
+  hierarchy_length++;
+}
+
+// title
+var title = (meta.pageName === 'top') ? siteSetting.siteName : meta.title + '｜' + siteSetting.siteName;
+
+// ogtype
+var ogtype = (meta.pageName === 'top') ? 'website' : 'article';
+
+// カノニカルセット
+var canonicalUrl = (hierarchy_length > 0) ? hierarchy_link_push : '';
+%>
+
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8">
+
+  <!-- SEO -->
+  <title><%= title %></title>
+  <meta name="description" content="<%= meta.desc %>">
+  <meta name="author" content="<%= siteSetting.metaAuthor %>">
+  <link rel="shortcut icon" type="image/svg+xml" href="<%= siteurl %>assets/images/favicon.svg">
+  <link rel="canonical" href="<%= siteurl + canonicalUrl %>">
+
+  <!-- IE -->
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="format-detection" content="telephone=no">
+
+  <!-- Settings -->
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0">
+  <meta name="theme-color" content="<%= siteSetting.themeColor %>">
+
+  <!-- SNS -->
+  <meta property="og:site_name" content="<%= siteSetting.siteName %>">
+  <meta property="og:title" content="<%= title %>">
+  <meta property="og:description" content="<%= meta.desc %>">
+  <meta property="og:type" content="<%= ogtype %>">
+  <meta property="og:locale" content="ja_JP">
+  <meta property="og:url" content="<%= siteurl + canonicalUrl %>">
+  <meta property="og:image" content="<%= siteurl %>assets/images/ogpimg.png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:site" content="<%= siteSetting.metaTwitterSite %>">
+  <meta name="twitter:creator" content="<%= siteSetting.metaTwitterCreator %>">
+
+  <!-- Preload -->
+  <link rel="preload" as="style" href="<%= siteurl %>assets/css/style.css?rev">
+  <link rel="preload" as="script" href="<%= siteurl %>assets/js/bundle.js?rev">
+
+  <!-- CSS -->
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700&display=swap">
+  <link rel="stylesheet" href="<%= siteurl %>assets/css/style.css?rev">
+
+  <%- include('_analytics-head') %>
+</head>
+
+<body id="gotop" class="<%= meta.pageName %>">
+  <%- include('_header', {meta: meta}) %>

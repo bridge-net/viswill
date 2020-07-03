@@ -1,0 +1,23 @@
+<%
+var define = (typeof define === 'undefined') ? '' : define;
+var meta = (typeof meta === 'undefined') ? '' : meta;
+if(meta) {
+%>
+<div class="l-breadcrumbs" typeof="BreadcrumbList" vocab="https://schema.org/">
+  <ul>
+    <li property="itemListElement" typeof="ListItem">
+      <a property="item" typeof="WebPage" title="トップ" href="<%= siteurl %>">
+        <span property="name">トップ</span>
+      </a>
+    </li>
+    <% for(i in meta.hierarchy) { %>
+      <li property="itemListElement" typeof="ListItem">
+        <a property="item" typeof="WebPage" title="<%= meta.hierarchy[i].title %>" href="<%= siteurl + meta.hierarchy[i].link %>">
+          <span property="name"><%= meta.hierarchy[i].title %></span>
+        </a>
+        <meta property="position" content="<%= ++i + 1 %>">
+      </li>
+    <% } %>
+  </ul>
+</div>
+<% } %>

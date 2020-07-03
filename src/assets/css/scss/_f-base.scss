@@ -1,0 +1,27 @@
+@charset 'utf-8';
+
+// 全体
+html {
+    font-size: 62.5%;
+    opacity: 0;
+
+    &.is-loaded {
+        opacity: 1;
+        transition: opacity $animeTime $animeType;
+    }
+
+    @include media(sm) {
+        font-size: vw(10);
+    }
+}
+body {
+    font-family: $fontFamily;
+    font-feature-settings: 'palt';
+    position: relative;
+
+    // アンチエイリアス
+    @media only screen and (-webkit-min-device-pixel-ratio: 2), (min-resolution: 2dppx) {
+        -webkit-font-smoothing: antialiased;
+        -moz-osx-font-smoothing: grayscale;
+    }
+}

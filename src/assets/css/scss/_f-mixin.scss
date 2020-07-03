@@ -1,0 +1,371 @@
+@charset 'utf-8';
+
+// mixin + function
+// ----------------------------------------------------------------------
+// 01. メディアクエリー
+// 02. フォント一括設定
+// 03. object-fitのIE用polyfill
+// 04. プレースホルダーのレイアウト
+// 05. formパーツのスタイルリセット
+// 06. vw変換
+// 07. テキストの縁取り
+// 08. IE11用スタイル
+// 09. edge用スタイル
+// 10. firefox用スタイル
+// 11. safari用スタイル
+// 12. タブレット用スタイル
+// 13. ラップトップだけどタッチサポートしているデバイス全般用スタイル
+// 14. 可変幅コンテンツ
+// ----------------------------------------------------------------------
+
+
+
+// 01 メディアクエリー
+// ex) @include media(sm) { ～ contents ～ }
+// ex) @include media(min-width, 800) { ～ contents ～ }
+// ----------------------------------------------------------------------
+
+@mixin media($size, $px: false) {
+  @if ($size == 'sm') {
+    @media screen and (max-width: $breakPoint - 1) {
+      @content;
+    }
+  }
+
+  @if ($size == 'se') {
+    @media screen and (max-width: 360px) {
+      @content;
+    }
+  }
+
+  @else if ($size == 'mid') {
+    @media screen and (min-width: $breakPoint) and (max-width: $breakPointMid - 1),
+      print {
+      @content;
+    }
+  }
+
+  @else if ($size == 'lg') {
+    @media screen and (min-width: $breakPoint), print {
+      @content;
+    }
+  }
+
+  @else if ($size == 'retina') {
+    @media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 2dppx) {
+      @content;
+    }
+  }
+
+  @if ($px) {
+    @if ($size == 'max-width') {
+      @media screen and (max-width: $px) {
+        @content;
+      }
+    }
+
+    @else if ($size == 'min-width') {
+      @media screen and (min-width: $px) {
+        @content;
+      }
+    }
+
+    @else if ($size == 'max-height') {
+      @media screen and (max-height: $px) {
+        @content;
+      }
+    }
+
+    @else if ($size == 'min-height') {
+      @media screen and (min-height: $px) {
+        @content;
+      }
+    }
+  }
+}
+
+
+
+// 02 フォント一括設定
+// font-size, rem/px, line-height, font-weight, letter-spacing
+// line-heightとletter-spacingはデザインデータの数値を参照
+// ex) @include fontSet(16, true, 24, 400, 75);
+// ----------------------------------------------------------------------
+
+@mixin fontSet($size, $rem: false, $height: false, $weight: false, $spacing: false) {
+  @if $rem {
+    font-size: #{$size / 10}rem;
+  }
+  @else {
+    font-size: #{$size}px;
+  }
+
+  @if $weight {
+    font-weight: $weight;
+  }
+
+  @if $spacing {
+    letter-spacing: #{$spacing / 1000}em;
+  }
+
+  @if $height {
+    line-height: $height / $size;
+  }
+}
+
+
+
+// 03 object-fitのIE用polyfill
+// ex) @include objectFit(fill);
+// ----------------------------------------------------------------------
+
+@mixin objectFit($fit: fill, $position: null) {
+  -o-object-fit: $fit;
+  object-fit: $fit;
+
+  @if $position {
+    -o-object-position: $position;
+    object-position: $position;
+    font-family: 'object-fit: #{$fit}; object-position: #{$position}';
+  }
+  @else {
+    font-family: 'object-fit: #{$fit}';
+  }
+}
+
+
+
+// 04 プレースホルダーのレイアウト
+// ex) @include placeholder() { ～ contents ～ }
+// ----------------------------------------------------------------------
+
+@mixin placeholder {
+  &:placeholder-shown {
+    @content;
+  }
+
+  &::-webkit-input-placeholder {
+    @content;
+  }
+
+  &:-moz-placeholder {
+    @content;
+    opacity: 1;
+  }
+
+  &::-moz-placeholder {
+    @content;
+    opacity: 1;
+  }
+
+  &:-ms-input-placeholder {
+    @content;
+  }
+}
+
+
+
+// 05 formパーツのスタイルリセット
+// ex) @include formReset();
+// ----------------------------------------------------------------------
+
+@mixin formReset() {
+  input, button, textarea, select {
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+    background: none;
+    border: none;
+    border-radius: 0;
+    margin: 0;
+    outline: none;
+    padding: 0;
+  }
+
+  select::-ms-expand {
+    display: none;
+  }
+}
+
+
+
+// 06 vw変換
+// ex) margin: 0 vw(80);
+// ----------------------------------------------------------------------
+
+@function vw($num, $baseWidth: $spBaseWidth) {
+  @return (1vw * $num / $baseWidth * 100);
+}
+
+
+
+// 07 テキストの縁取り
+// ex) @include textStroke(2, #333);
+// ----------------------------------------------------------------------
+
+@mixin textStroke($size: 2, $bg: #000) {
+  text-shadow: #{$size}px 0 0 #{$bg}, -#{$size}px 0 0 #{$bg}, 0 -#{$size}px 0 #{$bg}, 0 #{$size}px 0 #{$bg}, #{$size}px #{$size}px 0 #{$bg}, -#{$size}px #{$size}px 0 #{$bg}, #{$size}px -#{$size}px 0 #{$bg}, -#{$size}px -#{$size}px 0 #{$bg}, #{$size - 1}px #{$size}px 0 #{$bg}, -#{$size - 1}px #{$size}px 0 #{$bg}, #{$size - 1}px -#{$size}px 0 #{$bg}, -#{$size - 1}px -#{$size}px 0 #{$bg}, #{$size}px #{$size - 1}px 0 #{$bg}, -#{$size}px #{$size - 1}px 0 #{$bg}, #{$size}px -#{$size - 1}px 0 #{$bg}, -#{$size}px -#{$size - 1}px 0 #{$bg}, #{$size - 1}px #{$size - 1}px 0 #{$bg}, -#{$size - 1}px #{$size - 1}px 0 #{$bg}, #{$size - 1}px -#{$size - 1}px 0 #{$bg}, -#{$size - 1}px -#{$size - 1}px 0 #{$bg};
+}
+
+
+
+// 08 IE11用スタイル
+// ex) @include ie11(lg / sm) { ～ contents ～ }
+// ----------------------------------------------------------------------
+
+@mixin ie11($size: false) {
+  html[data-browser = "ie"][data-browserversion = "11"] & {
+    @if ($size) {
+      @if ($size == 'lg') {
+        @include media(lg) {
+          @content;
+        }
+      }
+      @else if ($size == 'sm') {
+        @include media(sm) {
+          @content;
+        }
+      }
+    }
+    @else {
+      @content;
+    }
+  }
+}
+
+
+
+// 09 edge用スタイル
+// ex) @include edge(lg / sm) { ～ contents ～ }
+// ----------------------------------------------------------------------
+
+@mixin edge($size: false, $engine: 'edgehtml') {
+  html[data-browser="edge"][data-browserengine="#{$engine}"] & {
+    @if ($size) {
+      @if ($size == 'lg') {
+        @include media(lg) {
+          @content;
+        }
+      }
+      @else if ($size == 'sm') {
+        @include media(sm) {
+          @content;
+        }
+      }
+    }
+    @else {
+      @content;
+    }
+  }
+}
+
+
+
+// 10 firefox用スタイル
+// ex) @include firefox(lg / sm) { ～ contents ～ }
+// ----------------------------------------------------------------------
+
+@mixin firefox($size: false) {
+  html[data-browser = "firefox"] & {
+    @if ($size) {
+      @if ($size == 'lg') {
+        @include media(lg) {
+          @content;
+        }
+      }
+      @else if ($size == 'sm') {
+        @include media(sm) {
+          @content;
+        }
+      }
+    }
+    @else {
+      @content;
+    }
+  }
+}
+
+
+
+// 11 safari用スタイル
+// ex) @include safari(lg / sm) { ～ contents ～ }
+// ----------------------------------------------------------------------
+
+@mixin safari($size: false) {
+  @if ($size == 'sm') {
+    html[data-browser = "mobile-safari"] & {
+      @content;
+    }
+  }
+  @else {
+    html[data-browser = "safari"] & {
+      @content;
+    }
+  }
+}
+
+
+
+// 12 タブレット用スタイル
+// ex) @include tablet(portrait / landscape) { ～ contents ～ }
+// ----------------------------------------------------------------------
+
+@mixin tablet($orientation: false) {
+  @if ($orientation) {
+    html[data-type="tablet"][data-orientation="#{$orientation}"] & {
+      @content;
+    }
+  }
+  @else {
+    html[data-type = 'tablet'] & {
+      @content;
+    }
+  }
+}
+
+
+
+// 13 ラップトップだけどタッチサポートしているデバイス全般用スタイル
+// ex) @include ipados(portrait / landscape) { ～ contents ～ }
+// ----------------------------------------------------------------------
+
+@mixin ipados($orientation: false) {
+  @if ($orientation) {
+    html[data-type="laptop"][data-os="mac-os"][data-browser="safari"][data-touchsupport="true"][data-orientation="#{$orientation}"]
+    & {
+      @content;
+    }
+  }
+  @else {
+    html[data-type = "laptop"][data-os = "mac-os"][data-browser = "safari"][data-touchsupport = "true"] & {
+      @content;
+    }
+  }
+}
+
+
+
+// 14 可変幅コンテンツ
+// ex) @include liquidContents(1200px, 30px, 20px);
+// ----------------------------------------------------------------------
+
+@mixin liquidContents($width: 1000px, $marginLg: 0, $marginSm: 0) {
+  margin-left: auto;
+  margin-right: auto;
+  max-width: $width;
+  @if $marginLg == 0 {
+    width: auto;
+  }
+  @else {
+    width: calc(100% - #{$marginLg} * 2);
+  }
+
+  @include media(sm) {
+    @if $marginSm == 0 {
+      width: auto;
+    }
+    @else {
+      width: calc(100% - #{$marginSm} * 2);
+    }
+  }
+}

@@ -1,0 +1,15 @@
+@charset 'utf-8';
+
+// PCのみ表示
+.l-lg {
+    @include media(sm) {
+        display: none !important;
+    }
+}
+
+// スマホのみ表示
+.l-sm {
+    @include media(lg) {
+        display: none !important;
+    }
+}
